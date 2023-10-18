@@ -24,6 +24,21 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
+    const brandsCollection = client.db("tasteCraftDB").collection("brands");
+
+    // Brand Related APIs
+    app.get("/brands", async (req, res) => {
+      const result = await brandsCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/brands", async (req, res) => {
+      const newBrands = req.body;
+      console.log(newBrands);
+      const result = await brandsCollection.insertOne(newBrands);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     console.log(
