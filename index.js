@@ -34,6 +34,14 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/brands/:brand", async (req, res) => {
+      const brand = req.params.brand;
+      console.log(brand);
+      const query = { brandName: brand };
+      const result = await brandsCollection.findOne(query);
+      res.send(result);
+    });
+
     app.post("/brands", async (req, res) => {
       const newBrands = req.body;
       const result = await brandsCollection.insertOne(newBrands);
