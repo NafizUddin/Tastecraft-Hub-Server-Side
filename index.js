@@ -26,6 +26,7 @@ async function run() {
 
     const brandsCollection = client.db("tasteCraftDB").collection("brands");
     const itemsCollection = client.db("tasteCraftDB").collection("items");
+    const usersCollection = client.db("tasteCraftDB").collection("users");
 
     // Brand Related APIs
     app.get("/brands", async (req, res) => {
@@ -35,7 +36,6 @@ async function run() {
 
     app.post("/brands", async (req, res) => {
       const newBrands = req.body;
-      console.log(newBrands);
       const result = await brandsCollection.insertOne(newBrands);
       res.send(result);
     });
@@ -48,8 +48,20 @@ async function run() {
 
     app.post("/items", async (req, res) => {
       const newItems = req.body;
-      console.log(newItems);
       const result = await itemsCollection.insertOne(newItems);
+      res.send(result);
+    });
+
+    // User related APIs
+
+    app.get("/users", async (req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/users", async (req, res) => {
+      const newUser = req.body;
+      const result = await usersCollection.insertOne(newUser);
       res.send(result);
     });
 
