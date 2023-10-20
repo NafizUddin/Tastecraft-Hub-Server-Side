@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -54,9 +54,36 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/items/:id([0-9a-fA-F]{24})", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await itemsCollection.findOne(query);
+      res.send(result);
+    });
+
     app.post("/items", async (req, res) => {
       const newItems = req.body;
       const result = await itemsCollection.insertOne(newItems);
+      res.send(result);
+    });
+
+    app.put("/items/:id([0-9a-fA-F]{24})", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedItems = req.body;
+      const options = { upsert: true };
+      const newItems = {
+        $set: {
+          name: updatedItems.name,
+          brand: updatedItems.brand,
+          type: updatedItems.type,
+          price: updatedItems.price,
+          photo: updatedItems.photo,
+          rating: updatedItems.rating,
+          description: updatedItems.description,
+        },
+      };
+      const result = await itemsCollection.updateOne(filter, newItems, options);
       res.send(result);
     });
 
