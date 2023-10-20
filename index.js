@@ -97,8 +97,8 @@ async function run() {
 
     app.post("/users", async (req, res) => {
       const newUser = req.body;
-      const { insertedId } = await usersCollection.insertOne(newUser);
-      res.send({ insertedId });
+      const result = await usersCollection.insertOne(newUser);
+      res.send(result);
     });
 
     // Cart Related APis
@@ -106,7 +106,7 @@ async function run() {
     app.get("/cart/:userId", async (req, res) => {
       const userId = req.params.userId;
       const query = {
-        userId,
+        userId: userId,
       };
       const result = await cartCollection.find(query).toArray();
       res.send(result);
