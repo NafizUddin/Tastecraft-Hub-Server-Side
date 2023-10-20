@@ -112,9 +112,25 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/cart/:email/:id([0-9a-fA-F]{24})", async (req, res) => {
+      const email = req.params.email;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id), userEmail: email };
+      const result = await cartCollection.findOne(query);
+      res.send(result);
+    });
+
     app.post("/cart", async (req, res) => {
       const newCartProduct = req.body;
       const result = await cartCollection.insertOne(newCartProduct);
+      res.send(result);
+    });
+
+    app.delete("/cart/:email/:id([0-9a-fA-F]{24})", async (req, res) => {
+      const email = req.params.email;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id), userEmail: email };
+      const result = await cartCollection.deleteOne(query);
       res.send(result);
     });
 
