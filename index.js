@@ -97,26 +97,18 @@ async function run() {
 
     app.post("/users", async (req, res) => {
       const newUser = req.body;
-      const result = await usersCollection.insertOne(newUser);
-      res.send(result);
+      const { insertedId } = await usersCollection.insertOne(newUser);
+      res.send({ insertedId });
     });
 
     // Cart Related APis
 
-    app.get("/cart/:email", async (req, res) => {
-      const requestedUserEmail = req.params.email;
+    app.get("/cart/:userId", async (req, res) => {
+      const userId = req.params.userId;
       const query = {
-        userEmail: requestedUserEmail,
+        userId,
       };
       const result = await cartCollection.find(query).toArray();
-      res.send(result);
-    });
-
-    app.get("/cart/:email/:id([0-9a-fA-F]{24})", async (req, res) => {
-      const email = req.params.email;
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id), userEmail: email };
-      const result = await cartCollection.findOne(query);
       res.send(result);
     });
 
@@ -126,10 +118,9 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/cart/:email/:id([0-9a-fA-F]{24})", async (req, res) => {
-      const email = req.params.email;
+    app.delete("/cart/:id([0-9a-fA-F]{24})", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: new ObjectId(id), userEmail: email };
+      const query = { _id: new ObjectId(id) };
       const result = await cartCollection.deleteOne(query);
       res.send(result);
     });
